@@ -61,7 +61,7 @@ namespace WalletKata.Test
             WalletService walletService = new WalletService(new FakeLoggedUser(loggedUser), new FakeWalletDAO(null));
 
             //Assert exception
-            Assert.Throws<NullReferenceException>(() => walletService.GetWalletsByUser(user));
+            Assert.Throws<ArgumentNullException>(() => walletService.GetWalletsByUser(user));
         }
 
         [Test]
