@@ -19,7 +19,7 @@ namespace WalletKata.Wallets
         {
             if(user == null)
             {
-                throw new NullReferenceException();
+                throw new ArgumentNullException();
             }
 
             List<Wallet> walletList = new List<Wallet>();
