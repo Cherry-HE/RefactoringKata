@@ -60,7 +60,7 @@ namespace WalletKata.Test
             User loggedUser = new User();
             WalletService walletService = new WalletService(new FakeLoggedUser(loggedUser), new FakeWalletDAO(null));
 
-              //Assert exception
+            //Assert exception
             Assert.Throws<NullReferenceException>(() => walletService.GetWalletsByUser(user));
         }
 
@@ -91,14 +91,13 @@ namespace WalletKata.Test
             User friend = new User();
             User loggedUser = new User();
             user.AddFriend(friend);
-            List<Wallet> expected = new List<Wallet>() { new Wallet(), new Wallet() };
-            WalletService walletService = new WalletService(new FakeLoggedUser(loggedUser), new FakeWalletDAO(expected));
+            WalletService walletService = new WalletService(new FakeLoggedUser(loggedUser), new FakeWalletDAO(null));
 
             //act
             List<Wallet> getListWallet = walletService.GetWalletsByUser(user);
 
             //assert
-            CollectionAssert.AreNotEqual(expected, getListWallet);
+            CollectionAssert.IsEmpty(getListWallet);
         }
     }
 }
