@@ -7,16 +7,16 @@ namespace WalletKata.Wallets
 {
     public class WalletService
     {
-        ILoggedUser _IloggedUser;
+        ILoggedUser _ILoggedUser;
 
         public WalletService(ILoggedUser IloggedUser)
         {
-            _IloggedUser = IloggedUser;
+            _ILoggedUser = IloggedUser;
         }
         public List<Wallet> GetWalletsByUser(User user, Func<User, List<Wallet>> FindWalletsByUser)
         {
             List<Wallet> walletList = new List<Wallet>();
-            User loggedUser = _IloggedUser.GetUser();
+            User loggedUser = _ILoggedUser.GetUser();
             bool isFriend = false;
 
             if (loggedUser != null)
