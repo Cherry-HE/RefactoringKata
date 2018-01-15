@@ -20,20 +20,33 @@ namespace WalletKata.Test
             {
                 return fakeUser;
             }
+
         }
+        public class FakeWalletDAO : IWalletDAO
+        {
+            List<Wallet> fakeWalletList;
+            public FakeWalletDAO(List<Wallet> walletList)
+            {
+                fakeWalletList = walletList;
+            }
+
+            public List<Wallet> FindWalletsByUser(User user)
+            {
+                return fakeWalletList;
+            }
+
+        }
+ 
         [Test]
         public void UnloggedUserTest()
         {
             //Arrange
             User unloggedUser = null;
             User user = new User();
-            WalletService walletService = new WalletService(new FakeLoggedUser(null));
+            WalletService walletService = new WalletService(new FakeLoggedUser(unloggedUser), new FakeWalletDAO(null));
 
             //Assert exception
-            Assert.Throws<UserNotLoggedInException>(()=> walletService.GetWalletsByUser(user, delegate (User u)
-            {
-                return new List<Wallet>();
-            }));
+            Assert.Throws<UserNotLoggedInException>(() => walletService.GetWalletsByUser(user));
 
         }
 
@@ -46,15 +59,12 @@ namespace WalletKata.Test
             User loggedUser = new User();
             user.AddFriend(friend);
             user.AddFriend(loggedUser);
-            WalletService walletService = new WalletService(new FakeLoggedUser(loggedUser));
 
-            List<Wallet> expected = new List<Wallet>() { new Wallet(),new Wallet()};
+            List<Wallet> expected = new List<Wallet>() { new Wallet(), new Wallet() };
+            WalletService walletService = new WalletService(new FakeLoggedUser(loggedUser), new FakeWalletDAO(expected));
 
             //act
-            List<Wallet> getListWallet =  walletService.GetWalletsByUser(user, delegate (User u)
-            {
-                return expected;
-            });
+            List<Wallet> getListWallet = walletService.GetWalletsByUser(user);
             //assert
             CollectionAssert.AreEqual(expected, getListWallet);
         }
@@ -67,17 +77,14 @@ namespace WalletKata.Test
             User friend = new User();
             User loggedUser = new User();
             user.AddFriend(friend);
-            WalletService walletService = new WalletService(new FakeLoggedUser(loggedUser));
-
             List<Wallet> expected = new List<Wallet>() { new Wallet(), new Wallet() };
+            WalletService walletService = new WalletService(new FakeLoggedUser(loggedUser), new FakeWalletDAO(expected));
 
             //act
-            List<Wallet> getListWallet = walletService.GetWalletsByUser(user, delegate (User u)
-            {
-                return expected;
-            });
+            List<Wallet> getListWallet = walletService.GetWalletsByUser(user);
             //assert
             CollectionAssert.AreNotEqual(expected, getListWallet);
         }
     }
 }
+
