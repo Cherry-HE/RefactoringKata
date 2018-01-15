@@ -7,16 +7,16 @@ namespace WalletKata.Wallets
 {
     public class WalletService
     {
-        User loggedUser;
+        ILoggedUser _IloggedUser;
 
-        public WalletService(User loggedUser)
+        public WalletService(ILoggedUser IloggedUser)
         {
-            this.loggedUser = loggedUser;
+            _IloggedUser = IloggedUser;
         }
         public List<Wallet> GetWalletsByUser(User user, Func<User, List<Wallet>> FindWalletsByUser)
         {
             List<Wallet> walletList = new List<Wallet>();
-            //User loggedUser = UserSession.GetInstance().GetLoggedUser();
+            User loggedUser = _IloggedUser.GetUser();
             bool isFriend = false;
 
             if (loggedUser != null)
@@ -42,5 +42,10 @@ namespace WalletKata.Wallets
                 throw new UserNotLoggedInException();
             }      
         }         
+    }
+
+    public interface ILoggedUser
+    {
+        User GetUser();
     }
 }
