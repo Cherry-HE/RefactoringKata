@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using WalletKata.Exceptions;
 using WalletKata.Users;
@@ -50,6 +51,19 @@ namespace WalletKata.Test
 
         }
 
+
+        [Test]
+        public void UserNullTest()
+        {
+            //Arrange
+            User user = null;
+            User loggedUser = new User();
+            WalletService walletService = new WalletService(new FakeLoggedUser(loggedUser), new FakeWalletDAO(null));
+
+              //Assert exception
+            Assert.Throws<NullReferenceException>(() => walletService.GetWalletsByUser(user));
+        }
+
         [Test]
         public void LoggedUserIsFriendTest()
         {
@@ -59,12 +73,12 @@ namespace WalletKata.Test
             User loggedUser = new User();
             user.AddFriend(friend);
             user.AddFriend(loggedUser);
-
             List<Wallet> expected = new List<Wallet>() { new Wallet(), new Wallet() };
             WalletService walletService = new WalletService(new FakeLoggedUser(loggedUser), new FakeWalletDAO(expected));
 
             //act
             List<Wallet> getListWallet = walletService.GetWalletsByUser(user);
+
             //assert
             CollectionAssert.AreEqual(expected, getListWallet);
         }
@@ -82,6 +96,7 @@ namespace WalletKata.Test
 
             //act
             List<Wallet> getListWallet = walletService.GetWalletsByUser(user);
+
             //assert
             CollectionAssert.AreNotEqual(expected, getListWallet);
         }
