@@ -8,12 +8,14 @@ namespace WalletKata.Wallets
     public class WalletService
     {
         ILoggedUser _ILoggedUser;
+        IWalletDAO _IWalletDAO;
 
-        public WalletService(ILoggedUser IloggedUser)
+        public WalletService(ILoggedUser IloggedUser, IWalletDAO IwalletDAO)
         {
             _ILoggedUser = IloggedUser;
+            _IWalletDAO = IwalletDAO;
         }
-        public List<Wallet> GetWalletsByUser(User user, Func<User, List<Wallet>> FindWalletsByUser)
+        public List<Wallet> GetWalletsByUser(User user)
         {
             List<Wallet> walletList = new List<Wallet>();
             User loggedUser = _ILoggedUser.GetUser();
@@ -32,7 +34,7 @@ namespace WalletKata.Wallets
 
                 if (isFriend)
                 {
-                    walletList = FindWalletsByUser(user);
+                    walletList = _IWalletDAO.FindWalletsByUser(user);
                 }
 
                 return walletList;
@@ -40,8 +42,13 @@ namespace WalletKata.Wallets
             else
             {
                 throw new UserNotLoggedInException();
-            }      
-        }         
+            }
+        }
+    }
+
+    public interface IWalletDAO
+    {
+        List<Wallet> FindWalletsByUser(User user);
     }
 
     public interface ILoggedUser
