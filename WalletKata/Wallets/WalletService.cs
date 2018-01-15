@@ -17,6 +17,11 @@ namespace WalletKata.Wallets
         }
         public List<Wallet> GetWalletsByUser(User user)
         {
+            if(user == null)
+            {
+                throw new NullReferenceException();
+            }
+
             List<Wallet> walletList = new List<Wallet>();
             User loggedUser = _ILoggedUser.GetUser();
             bool isFriend = false;
